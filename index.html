@@ -2,14 +2,87 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo Colision 2D</title>
+    <title>Simulación de Círculos</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- CSS propio -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <canvas id="canvas"></canvas>
+<!-- 🔷 NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold">Simulador de Círculos</a>
+  </div>
+</nav>
 
-    <script src="./assets/js/main_colision.js"></script>
-    
+<!-- 🔷 CONTENIDO -->
+<div class="container mt-4">
+
+    <!-- Slider -->
+    <div class="card p-3 shadow glass">
+        <label class="form-label fw-bold">Cantidad de círculos: <span id="valor">10</span></label>
+        <input type="range" class="form-range" min="1" max="30" value="10" id="slider">
+    </div>
+
+    <div class="row mt-4 g-4">
+
+        <!-- Movimiento -->
+        <div class="col-md-4">
+            <div class="card shadow glass p-3 text-center">
+                <h5>Movimiento</h5>
+                <canvas id="canvas1"></canvas>
+            </div>
+        </div>
+
+        <!-- Colisión -->
+        <div class="col-md-4">
+            <div class="card shadow glass p-3 text-center">
+                <h5>Colisiones</h5>
+                <canvas id="canvas2"></canvas>
+            </div>
+        </div>
+
+        <!-- Rebote -->
+        <div class="col-md-4">
+            <div class="card shadow glass p-3 text-center">
+                <h5>Rebote</h5>
+                <canvas id="canvas3"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 🔷 FOOTER -->
+<footer class="bg-dark text-white text-center p-3 mt-4">
+    <p class="mb-0">Desarrollado por Aylin Guadalupe Lucas Alvarado 💻</p>
+</footer>
+
+<!-- Scripts -->
+<script src="./assets/js/main.js"></script>
+<script src="./assets/js/main_colision.js"></script>
+<script src="./assets/js/main_rebote.js"></script>
+
+<script>
+const slider = document.getElementById("slider");
+const valor = document.getElementById("valor");
+
+valor.textContent = slider.value;
+
+// 🔥 Evento global para actualizar TODOS los canvas
+slider.addEventListener("input", () => {
+    valor.textContent = slider.value;
+
+    // Llamar funciones globales de cada script
+    initMovimiento(slider.value);
+    initColision(slider.value);
+    initRebote(slider.value);
+});
+</script>
+
 </body>
 </html>
