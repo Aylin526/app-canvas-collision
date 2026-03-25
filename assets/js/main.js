@@ -1,30 +1,59 @@
+const canvas1 = document.getElementById("canvas1");
+const ctx1 = canvas1.getContext("2d");
+
+canvas1.width = canvas1.clientWidth;
+canvas1.height = 250;
+
 let circles1 = [];
+let anim1;
 
-function initMovimiento(N) {
-    const canvas = document.getElementById("canvas1");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = 300;
-    canvas.height = 200;
-
-    circles1 = [];
-
-    for (let i = 0; i < N; i++) {
-        let r = Math.random() * 20 + 10;
-        let x = Math.random() * (canvas.width - 2*r) + r;
-        let y = Math.random() * (canvas.height - 2*r) + r;
-
-        circles1.push(new Circle(x, y, r, "cyan", i, 2));
+class Circle1 {
+    constructor(x, y, r, speed) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.dx = (Math.random() - 0.5) * speed * 2;
+        this.dy = (Math.random() - 0.5) * speed * 2;
     }
 
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        circles1.forEach(c => c.update(ctx));
-        requestAnimationFrame(animate);
+    draw() {
+        ctx1.beginPath();
+        ctx1.fillStyle = "blue";
+        ctx1.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx1.fill();
     }
 
-    animate();
+    update() {
+        if (this.x + this.r > canvas1.width || this.x - this.r < 0) this.dx *= -1;
+        if (this.y + this.r > canvas1.height || this.y - this.r < 0) this.dy *= -1;
+
+        this.x += this.dx;
+        this.y += this.dy;
+
+        this.draw();
+    }
 }
 
-// Inicial
-initMovimiento(10);
+function iniciarMovimiento() {
+    cancelAnimationFrame(anim1);
+    circles1 = [];
+
+    for (let i = 0; i < NUM_CIRCLES; i++) {
+        let r = Math.random() * 20 + 10;
+        circles1.push(new Circle1(
+            Math.random() * canvas1.width,
+            Math.random() * canvas1.height,
+            r, 3
+        ));
+    }
+
+    animar1();
+}
+
+function animar1() {
+    anim1 = requestAnimationFrame(animar1);
+    ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+    circles1.forEach(c => c.update());
+}
+
+iniciarMovimiento();

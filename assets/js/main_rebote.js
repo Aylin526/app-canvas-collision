@@ -1,65 +1,101 @@
+const canvas3 = document.getElementById("canvas3");
+const ctx3 = canvas3.getContext("2d");
+
+canvas3.width = canvas3.clientWidth;
+canvas3.height = 250;
+
 let circles3 = [];
+let anim3;
 
-function initRebote(N) {
-    const canvas = document.getElementById("canvas3");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = 300;
-    canvas.height = 200;
-
-    circles3 = [];
-
-    for (let i = 0; i < N; i++) {
-        let r = Math.random() * 20 + 10;
-        let x = Math.random() * (canvas.width - 2*r) + r;
-        let y = Math.random() * (canvas.height - 2*r) + r;
-
-        circles3.push(new Circle(x, y, r, "lime", i, 2));
+class Circle3 {
+    constructor(x,y,r){
+        this.x=x;
+        this.y=y;
+        this.r=r;
+        this.color="blue";
+        this.dx=(Math.random()-0.5)*4;
+        this.dy=(Math.random()-0.5)*4;
     }
 
-    function detectar() {
-        for (let i = 0; i < circles3.length; i++) {
-            for (let j = i + 1; j < circles3.length; j++) {
+    draw(){
+        ctx3.beginPath();
+        ctx3.fillStyle=this.color;
+        ctx3.arc(this.x,this.y,this.r,0,Math.PI*2);
+        ctx3.fill();
 
-                let dx = circles3[j].posX - circles3[i].posX;
-                let dy = circles3[j].posY - circles3[i].posY;
+        ctx3.lineWidth=2;
+        ctx3.strokeStyle="white";
+        ctx3.stroke();
+    }
 
-                let dist = Math.sqrt(dx*dx + dy*dy);
+    update(){
+        if(this.x+this.r>canvas3.width||this.x-this.r<0) this.dx*=-1;
+        if(this.y+this.r>canvas3.height||this.y-this.r<0) this.dy*=-1;
 
-                if (dist <= circles3[i].radius + circles3[j].radius) {
+        this.x+=this.dx;
+        this.y+=this.dy;
 
-                    // Rebote
-                    let tempDx = circles3[i].dx;
-                    let tempDy = circles3[i].dy;
+        this.draw();
+    }
+}
 
-                    circles3[i].dx = circles3[j].dx;
-                    circles3[i].dy = circles3[j].dy;
+function rebote(c1,c2){
+    let dx=c2.x-c1.x;
+    let dy=c2.y-c1.y;
+    let dist=Math.sqrt(dx*dx+dy*dy);
 
-                    circles3[j].dx = tempDx;
-                    circles3[j].dy = tempDy;
+    if(dist < c1.r+c2.r){
 
-                    // Color
-                    circles3[i].color = "orange";
-                    circles3[j].color = "orange";
-                }
-            }
+        c1.color="red";
+        c2.color="red";
+
+        let nx=dx/dist;
+        let ny=dy/dist;
+
+        let dvx=c1.dx-c2.dx;
+        let dvy=c1.dy-c2.dy;
+
+        let impacto=dvx*nx+dvy*ny;
+        if(impacto>0) return;
+
+        let fuerza=1.3;
+
+        c1.dx-=fuerza*impacto*nx;
+        c1.dy-=fuerza*impacto*ny;
+
+        c2.dx+=fuerza*impacto*nx;
+        c2.dy+=fuerza*impacto*ny;
+    }
+}
+
+function iniciarRebote(){
+    cancelAnimationFrame(anim3);
+    circles3=[];
+
+    for(let i=0;i<NUM_CIRCLES;i++){
+        circles3.push(new Circle3(
+            Math.random()*canvas3.width,
+            Math.random()*canvas3.height,
+            Math.random()*20+10
+        ));
+    }
+
+    animar3();
+}
+
+function animar3(){
+    anim3=requestAnimationFrame(animar3);
+    ctx3.clearRect(0,0,canvas3.width,canvas3.height);
+
+    circles3.forEach(c=>c.color="blue");
+
+    for(let i=0;i<circles3.length;i++){
+        for(let j=i+1;j<circles3.length;j++){
+            rebote(circles3[i],circles3[j]);
         }
     }
 
-    function animate() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-
-        circles3.forEach(c => {
-            c.color = "lime";
-            c.update(ctx);
-        });
-
-        detectar();
-
-        requestAnimationFrame(animate);
-    }
-
-    animate();
+    circles3.forEach(c=>c.update());
 }
 
-initRebote(10);
+iniciarRebote();
