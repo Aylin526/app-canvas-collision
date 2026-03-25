@@ -14,13 +14,30 @@ class Circle1 {
         this.r = r;
         this.dx = (Math.random() - 0.5) * speed * 2;
         this.dy = (Math.random() - 0.5) * speed * 2;
+        this.color = "rgba(0,150,255,0.6)";
     }
 
     draw() {
+        let g = ctx1.createRadialGradient(
+            this.x - this.r * 0.3,
+            this.y - this.r * 0.3,
+            this.r * 0.1,
+            this.x,
+            this.y,
+            this.r
+        );
+
+        g.addColorStop(0, "rgba(255,255,255,0.8)");
+        g.addColorStop(0.3, this.color);
+        g.addColorStop(1, "rgba(255,255,255,0.1)");
+
         ctx1.beginPath();
-        ctx1.fillStyle = "blue";
+        ctx1.fillStyle = g;
         ctx1.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx1.fill();
+
+        ctx1.strokeStyle = "rgba(255,255,255,0.4)";
+        ctx1.stroke();
     }
 
     update() {
@@ -40,11 +57,11 @@ function iniciarMovimiento() {
 
     for (let i = 0; i < NUM_CIRCLES; i++) {
         let r = Math.random() * 20 + 10;
-        circles1.push(new Circle1(
-            Math.random() * canvas1.width,
-            Math.random() * canvas1.height,
-            r, 3
-        ));
+
+        let x = Math.random() * (canvas1.width - 2*r) + r;
+        let y = Math.random() * (canvas1.height - 2*r) + r;
+
+        circles1.push(new Circle1(x, y, r, 3));
     }
 
     animar1();

@@ -1,22 +1,59 @@
+/* 🌌 FONDO CON IMAGEN */
 body {
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background: 
+        linear-gradient(rgba(15, 32, 39, 0.7), rgba(15, 32, 39, 0.9)),
+        url("../img/fondo.jpg");
+        
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     min-height: 100vh;
 }
 
+/* ✨ GLASS */
 .glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
     color: white;
+    transition: transform 0.3s ease;
 }
 
+.glass:hover {
+    transform: scale(1.03);
+}
+
+/* 🎨 CANVAS (NO SE TOCA) */
 canvas {
     width: 100%;
     height: 250px;
-    background: #111;
-    border-radius: 10px;
+    background: linear-gradient(145deg, #0f2027, #203a43);
+    border-radius: 15px;
 }
 
-h5, h6 {
-    color: white;
+/* 🧭 NAVBAR */
+.navbar {
+    background: rgba(0,0,0,0.7) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* 🧾 FOOTER */
+footer {
+    background: rgba(0,0,0,0.7);
+}
+
+/* 🎚 SLIDER */
+input[type="range"] {
+    accent-color: #00c6ff;
+}
+
+/* 📘 INFO */
+.info-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    border-left: 3px solid #00c6ff;
+    backdrop-filter: blur(8px);
+    color: #ddd;
+    font-size: 0.85rem;
 }
